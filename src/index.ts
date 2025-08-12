@@ -1,15 +1,14 @@
 import { ApolloServer } from "@apollo/server";
-import typedefs from "./schema/schema";
-import { buildSubgraphSchema } from "@apollo/subgraph";
+import typeDefs from "./schema/schema.js";
 import 'dotenv/config';
 import {db} from './db.js'
-import { users } from "./drizzle/schema";
+import { users } from "./drizzle/schema.js";
 import { eq } from "drizzle-orm";
 import { and } from "drizzle-orm";
-import { error } from "console";
+import { startStandaloneServer } from "@apollo/server/standalone";
 const resolvers={
     Query:{
-    login: async (_:any,{username,password}:{username:string, password:string})=> {
+    login: async (_:any,{username,password}:{username:string, password:string},context:{db:any})=> {
         const user= await db.select().from(users)
         .where(
             and(
@@ -23,3 +22,11 @@ const resolvers={
 
 }
 }
+const server = new ApolloServer({
+    typeDefs,
+    resolvers
+});
+const {url}= await startStandaloneServer(server,{
+    listen: {port:4000}
+});
+console.log(`server ready at: ${url} `);

@@ -1,7 +1,6 @@
 import { drizzle } from "drizzle-orm/mysql2";
 import 'dotenv/config';
 import mysql from 'mysql2/promise';
-import * as Schema from './drizzle/schema.js';
 const pool= mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
