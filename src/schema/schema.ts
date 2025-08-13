@@ -7,12 +7,15 @@ type users @key (fields:"id"){
     username:String!
     password:Int!
 }
-type task @key(fields:id){
-    id:ID!
-    title:String!
+extend type Task @key(fields: "id") {
+  id: ID! @external
 }
+
 type Query{
-    login(username:String!, password:Int!): [Task]
+    login(username:String!, password:Int!): users
+}
+type Mutation{
+    adduser(username:String!, password:Int!):users
 }
 `
 export default typeDefs;
